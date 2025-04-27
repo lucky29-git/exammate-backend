@@ -6,7 +6,11 @@ const cloudinary = require('cloudinary').v2
 const fileUpload = require('express-fileupload')
 const cors = require('cors');
 const { QuestionPaper } = require('./db');
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',   // allow your frontend to talk to backend
+    methods: ['GET', 'POST'],
+    credentials: true
+  }));
 app.use(express.json())
 app.use(fileUpload({
     useTempFiles : true,
