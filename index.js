@@ -6,6 +6,7 @@ const cloudinary = require('cloudinary').v2
 const fileUpload = require('express-fileupload')
 const cors = require('cors');
 const { QuestionPaper } = require('./db');
+app.options('*', cors());
 app.use(cors({
     origin: ['https://exammate-frontend-git-master-lucky29-gits-projects.vercel.app', 'http://localhost:5173'], // Specify exact origins instead of '*'
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -104,6 +105,8 @@ app.post('/paper' , async function(req, res){
 
 })
 
-app.get('/papers:semester')
+app.get('/test', (req, res) => {
+    res.json({ message: 'Backend is working!' });
+});
 
 app.listen(port)
