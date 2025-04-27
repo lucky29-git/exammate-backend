@@ -7,10 +7,12 @@ const fileUpload = require('express-fileupload')
 const cors = require('cors');
 const { QuestionPaper } = require('./db');
 app.use(cors({
-    origin: 'http://localhost:5173',   // allow your frontend to talk to backend
-    methods: ['GET', 'POST'],
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }));
+  
+  app.options('*', cors()); 
 app.use(express.json())
 app.use(fileUpload({
     useTempFiles : true,
