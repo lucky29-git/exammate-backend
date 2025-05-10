@@ -2,33 +2,16 @@ const express = require('express')
 const router = express.Router()
 const port = 3000;
 const app = express()
+const cors = require('cors');
+app.use(cors())
 const cloudinary = require('cloudinary').v2
 const fileUpload = require('express-fileupload')
-const cors = require('cors');
 const { QuestionPaper } = require('./db');
-app.options('*', cors());
-app.use(cors({
-    origin: ['https://exammate-frontend-git-master-lucky29-gits-projects.vercel.app', 'http://localhost:5173'], // Specify exact origins instead of '*'
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }));
-
 app.use(express.json())
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
-
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*'); // or your frontend URL
-//   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   if (req.method === 'OPTIONS') {
-//     return res.sendStatus(200);
-//   }
-//   next();
-// });
 
 cloudinary.config({
     cloud_name:'duk8c1spp',
@@ -70,6 +53,7 @@ app.post('/upload', async function(req, res){
         // console.log(req.body);
         const image_url = result.secure_url;
         const newPaper = await QuestionPaper.create({
+            branch: req.body.branch,
             title: req.body.title,
             semester: req.body.semester,
             subject: req.body.subject,
@@ -93,8 +77,10 @@ app.post('/upload', async function(req, res){
 app.post('/paper' , async function(req, res){
     const semester = req.body.semester;
     const subject = req.body.subject;
+    const branch = req.body.branch;
     console.log(req.body);
     const value = await QuestionPaper.find({
+        branch: branch,
         semester: semester,
         subject: subject
     })
@@ -105,8 +91,6 @@ app.post('/paper' , async function(req, res){
 
 })
 
-app.get('/test', (req, res) => {
-    res.json({ message: 'Backend is working!' });
-});
+app.get('/papers:semester')
 
 app.listen(port)
